@@ -14,6 +14,7 @@ spring:
     url: jdbc:mysql://ec2-test-db.c3e4yyiiq0p2.ap-northeast-2.rds.amazonaws.com:3306/ec2testdb
     username: admin
     password: 12345678
+
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
