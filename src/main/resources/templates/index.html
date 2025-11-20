@@ -21,10 +21,66 @@
                     <li><strong>서버 환경 : </strong> <span th:text="${serverInfo}"></span></li>
                 </ul>
             </div>
+            <!-- db 연결 정보 카드 -->
+            <div class="card info">
+                <h3>db 연결</h3>
+                <ul>
+                    <li><strong>DB 연결 상태 : </strong> <span th:text="${dbStatus}"></span></li>
+                    <li><strong>DB URL : </strong> <span th:text="${dbURL}"></span></li>
+                    <li><strong>DB 이름 : </strong> <span th:text="${dbName}"></span></li>
+                </ul>
+            </div>
+            <!-- 게시글 DB 테스트 카드 -->
+            <div class="card">
+                <h3>게시글 테스트</h3>
+                <!-- AJAX /board API를 호출하여 실시간으로 게시글 목록을 불러옮 -->
+                <button class="button" onclick="loadBoards()">게시글 불러오기</button>
+                <div id="board-list" style="margin-top: 20px;">
+                    <p style="color: blue;">버튼을 클릭하면 DB에서 데이터를 불러옵니다.</p>
+                </div>
+            </div>
         </div>
         <div class="footer">
             <p>2025 EC2 Test Application | Spring Boot 3.5.7</p>
         </div>
     </div>
+    <script>
+        function loadBoards() {
+            const boardList = document.getElementById('board-list');
+            boardList.innerHTML = '<p style="color: green;">로딩 중...</p>';
+            fetch('/boards')
+                .then(response => {
+                    // 응답 상태 확인 (200번대 아니면 에러)
+                    if (!response.ok) {
+                        throw new Error('HTTP' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.length === 0) {
+                        boardList.innerHTML = '<p style="color: red;">게시글이 없습니다.</p>';
+                        return;
+                    } else {
+                        let html = `<p style="color: #28a745; font-weight: bold;"> DB 연동 성공 ! 총 ${data.length}개의 게시글이 있습니다.</p>`;
+                        html += `<div style="max-height: 400px; overflow-y: auto;">`;
+                        data.forEach((board, index) => {
+                            html += `
+                                <div style="border: 1px solid #ddd; padding: 12px; margin: 10px 0; border-radius: 5px; background-color: #f8f9fa;">
+                                    <div style="color: #666; font-size: 0.9em;">게시글 #${index + 1} (ID : ${board.id}) </div>
+                                    <h4 style="font-weight: bold; margin: 5px 0;">${board.title}</h4>
+                                    <p style="color: #555;">${board.content}</p>
+                                </div>
+                            `;
+                        });
+                        html += `</div>`;
+                        boardList.innerHTML = html;
+                    }
+                })
+                .catch(error => {
+                    boardList.innerHTML = '<p style="color: red;">게시글을 불러오는 데 실패했습니다.</p>';
+                    console.error('Error fetching boards:', error);
+                });
+        }
+    </script>
 </body>
 </html>

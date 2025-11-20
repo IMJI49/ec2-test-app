@@ -18,6 +18,8 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
+## 모든 민감 정보 제외
+**/application.yaml
 .idea
 *.iws
 *.iml

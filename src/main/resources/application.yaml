@@ -9,6 +9,19 @@ spring:
   jackson:  #JSON 변환 라이브러리 타임존
     time-zone:
       Asia/Seoul
+  datasource:
+    url: jdbc:mysql://localhost:3306/ec2-testdb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: 12345
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        '[format_sql]': true
+        dialect: org.hibernate.dialect.MySQLDialect
 logging:
   level:
     root: INFO
@@ -18,3 +31,4 @@ logging:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %"
 server:
   port: 8080
+debug: true
